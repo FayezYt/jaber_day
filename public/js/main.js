@@ -11,13 +11,13 @@ worker.value = str;
 
 let companies = [];
 let cities = []; // Array to store cities data
-let ip_address = '192.168.1.16:4455'; //https://mnc-reports.onrender.com
+let ip_address = 'https://jaber-day.onrender.com'; 
 
 
 // DATA FETCHING
 window.onload = function() {
   // Fetch companies data
-  fetch(`/get-companies`)
+  fetch(`https://jaber-day.onrender.com/get-companies`)
       .then(response => response.json()) // Parse the response as JSON
       .then(data => {
           companies = data; // Store the data in the array
@@ -30,7 +30,7 @@ window.onload = function() {
       });
 
   // Fetch city data
-  fetch(`/get-cities`)
+  fetch(`https://jaber-day.onrender.com/get-cities`)
       .then(response => response.json())
       .then(cities => {
           console.log(cities, 'locationS Here for test'); // Check the structure of the data
