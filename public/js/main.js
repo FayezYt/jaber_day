@@ -17,7 +17,7 @@ let ip_address = '192.168.1.16:4455'; //https://mnc-reports.onrender.com
 // DATA FETCHING
 window.onload = function() {
   // Fetch companies data
-  fetch(`${ip_address}/get-companies`)
+  fetch(`/get-companies`)
       .then(response => response.json()) // Parse the response as JSON
       .then(data => {
           companies = data; // Store the data in the array
@@ -30,7 +30,7 @@ window.onload = function() {
       });
 
   // Fetch city data
-  fetch(`${ip_address}/get-cities`)
+  fetch(`/get-cities`)
       .then(response => response.json())
       .then(cities => {
           console.log(cities, 'locationS Here for test'); // Check the structure of the data
@@ -113,12 +113,18 @@ function searchCompanies() {
 let selectedCity = 'all';  // Initially, no city filter applied
 let currentSearchTerm = '';  // Initially, no search term
 
-// Function to apply both city and search filters
+let selectedDay = 'all'; // Initially, no day filter applied
+
 function filterCompanies() {
     var citySelect = document.getElementById('city');
-    selectedCity = citySelect.value.toUpperCase();  // Get the selected city
+    selectedCity = citySelect.value.trim().toUpperCase();  // Trim spaces from selected city
+
     var input = document.getElementById('searchInput');
     currentSearchTerm = input.value.toUpperCase();  // Get the search term
+
+    // Get the selected day filter
+    var daySelect = document.getElementById('dayFilter');
+    selectedDay = daySelect.value.trim().toUpperCase();  // Trim spaces for day filter
 
     var div = document.getElementById("companyList");
     var companyItems = div.getElementsByClassName('companyItem');
@@ -126,20 +132,31 @@ function filterCompanies() {
     for (var i = 0; i < companyItems.length; i++) {
         var company = companies[i];
         var companyName = company.name.toUpperCase();
-        var companyCity = company.city.toUpperCase();
+        var companyCity = company.city.trim().toUpperCase();  // Trim spaces for company city
+        var companyDay = company.day.trim().toUpperCase(); // Trim spaces for company day
 
-        // Check if the company matches the selected city and the search term
+        // Check if the company matches the selected city, day, and the search term
         var matchesCity = (selectedCity === 'ALL' || companyCity === selectedCity);
+        var matchesDay = (selectedDay === 'ALL' || companyDay === selectedDay);
         var matchesSearch = companyName.indexOf(currentSearchTerm) > -1;
 
-        // Apply both filters together
-        if (matchesCity && matchesSearch) {
+        // Apply all filters together
+        if (matchesCity && matchesDay && matchesSearch) {
             companyItems[i].style.display = "";
         } else {
             companyItems[i].style.display = "none";
         }
     }
 }
+
+
+
+// Add event listener for day filter change
+var daySelect = document.getElementById('dayFilter');
+daySelect.addEventListener('change', function() {
+    filterCompanies();  // Apply all filters when day changes
+});
+
 
 // Add event listener for city filter change
 var citySelect = document.getElementById('city');
@@ -230,7 +247,8 @@ function submitData() {
     const day = now.getDate().toString().padStart(2, '0');
     const date = `${year}-${month}-${day}`;
 
-    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    // Arabic Day Names
+    const dayNames = ['الاحد', 'الاثنين', 'الثلاثاء', 'الاربعاء', 'الخميس', 'الجمعة', 'السبت'];
     const dayName = dayNames[now.getDay()];
 
     var selectedCompanies = document.querySelectorAll('.companyItem input[type=checkbox]:checked');
@@ -306,7 +324,8 @@ button.addEventListener('click', function() {
     const month = (now.getMonth() + 1).toString().padStart(2, '0');
     const day = now.getDate().toString().padStart(2, '0');
     const dateString = `${year}-${month}-${day}`;
-    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    // Arabic Day Names
+    const dayNames = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
     const dayName = dayNames[now.getDay()];
     const worker = document.getElementById("worker").value;
 
@@ -336,6 +355,4 @@ button.addEventListener('click', function() {
 
 function formatTime(time) {
     return time + ":00"; // Format time to include seconds
-}
-
-
+};
