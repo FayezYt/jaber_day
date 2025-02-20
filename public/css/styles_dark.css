@@ -150,7 +150,9 @@ select:focus {
   transform: translateX(-4px);
 }
 
-
+#dayFilter {
+  width: 85%;
+}
 
 /* Enhanced Buttons */
 #submitButton, #no_work {

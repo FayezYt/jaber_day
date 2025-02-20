@@ -157,6 +157,10 @@ select:focus {
   #location {
     width: 85%;
   }
+
+  #dayFilter {
+    width: 85%;
+  }
 }
 
 
